@@ -318,7 +318,8 @@ class MarkmapEditor implements CustomTextEditorProvider {
         await writeFile(targetUri, data.content);
       },
       openFile(relPath: string) {
-        const filePath = Utils.joinPath(Utils.dirname(document.uri), relPath);
+        const decoded = decodeURIComponent(relPath);
+        const filePath = Utils.joinPath(Utils.dirname(document.uri), decoded);
         commands.executeCommand('vscode.open', filePath);
       },
       async setFocus(line: number) {
