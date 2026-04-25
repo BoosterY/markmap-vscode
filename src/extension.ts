@@ -203,8 +203,10 @@ class MarkmapEditor implements CustomTextEditorProvider {
         ...globalOptions,
         ...(frontmatter as any)?.markmap,
       };
-      const { embedAssets } = jsonOptions as { embedAssets?: boolean };
-      setExportMode(embedAssets);
+      const offline =
+        (jsonOptions as { embedAssets?: boolean }).embedAssets ??
+        workspace.getConfiguration('markmap.export').get<boolean>('offline');
+      setExportMode(offline);
       const otherAssets = mergeAssets(
         {
           scripts: baseJsPaths.map(buildJSItem),
@@ -245,7 +247,7 @@ class MarkmapEditor implements CustomTextEditorProvider {
           ],
         },
       );
-      if (embedAssets) {
+      if (offline) {
         const [styles, scripts] = await Promise.all([
           Promise.all(
             (assets.styles || []).map(async (item): Promise<CSSItem> => {

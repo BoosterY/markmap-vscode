@@ -42,6 +42,8 @@ export function setExportMode(offline: boolean) {
 
 const IGNORE_COMMENT = '<!-- markmap: ignore -->';
 
+// TODO: Workaround until markmap-lib natively supports `<!-- markmap: ignore -->`.
+// Remove this once https://github.com/markmap/markmap-vscode/issues/38 is addressed upstream.
 export function stripIgnored(md: string): string {
   const lines = md.split('\n');
   const result: string[] = [];
