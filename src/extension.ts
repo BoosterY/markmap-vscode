@@ -28,6 +28,7 @@ import {
   ASSETS_PREFIX,
   appAssets,
   setExportMode,
+  stripIgnored,
   toolbarAssets,
   transformerExport,
 } from './util';
@@ -173,7 +174,7 @@ class MarkmapEditor implements CustomTextEditorProvider {
       });
     };
     const update = () => {
-      const md = document.getText();
+      const md = stripIgnored(document.getText());
       const { root, frontmatter } = transformerLocal.transform(
         md,
         globalOptions?.htmlParser,
@@ -196,7 +197,7 @@ class MarkmapEditor implements CustomTextEditorProvider {
     const logger = vscodeWindow.createOutputChannel('Markmap');
 
     const exportAsHtml = async (targetUri: Uri) => {
-      const md = document.getText();
+      const md = stripIgnored(document.getText());
       const { root, features, frontmatter } = transformerExport.transform(md);
       const jsonOptions = {
         ...globalOptions,

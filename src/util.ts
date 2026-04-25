@@ -39,3 +39,28 @@ export function setExportMode(offline: boolean) {
     transformerExport.urlBuilder.provider = bestProvider;
   }
 }
+
+const IGNORE_COMMENT = '<!-- markmap: ignore -->';
+
+export function stripIgnored(md: string): string {
+  const lines = md.split('\n');
+  const result: string[] = [];
+  let ignoring = false;
+  let ignoreLevel = 0;
+  for (const line of lines) {
+    const headingMatch = line.match(/^(#{1,6})\s/);
+    if (ignoring && headingMatch && headingMatch[1].length <= ignoreLevel) {
+      ignoring = false;
+    }
+    if (ignoring) continue;
+    if (line.includes(IGNORE_COMMENT)) {
+      if (headingMatch) {
+        ignoreLevel = headingMatch[1].length;
+        ignoring = true;
+      }
+      continue;
+    }
+    result.push(line);
+  }
+  return result.join('\n');
+}
